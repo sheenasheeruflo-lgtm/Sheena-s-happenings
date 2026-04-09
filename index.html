@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sheena's Cozy Stories</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #ffd6ec, #d6e4ff, #e6d6ff);
+  color: #444;
+}
+header {
+  text-align: center;
+  padding: 30px;
+  color: white;
+  animation: fadeIn 1.5s ease-in;
+}
+h1 {
+  margin: 0;
+  font-size: 2.5em;
+}
+nav {
+  text-align: center;
+  padding: 10px;
+}
+nav button {
+  background: #fff;
+  border: none;
+  padding: 10px 15px;
+  margin: 5px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+nav button:hover {
+  background: #ffb6d9;
+  color: white;
+}
+.container {
+  padding: 20px;
+  max-width: 800px;
+  margin: auto;
+}
+.card {
+  background: rgba(255,255,255,0.9);
+  padding: 20px;
+  margin: 15px 0;
+  border-radius: 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  animation: fadeUp 1s ease;
+}
+textarea, input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-family: inherit;
+}
+button.post {
+  margin-top: 10px;
+  background: #ff8fcf;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 15px;
+  cursor: pointer;
+}
+.music {
+  text-align: center;
+  margin-top: 20px;
+}
+footer {
+  text-align: center;
+  padding: 15px;
+  font-size: 0.8em;
+  color: #666;
+}
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+@keyframes fadeUp {
+  from {transform: translateY(20px); opacity: 0;}
+  to {transform: translateY(0); opacity: 1;}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>✨ Sheena's Cozy Stories ✨</h1>
+  <p>Your safe little world of thoughts & stories</p>
+</header>
+
+<nav>
+  <button onclick="showSection('write')">Write</button>
+  <button onclick="showSection('stories')">My Stories</button>
+</nav>
+
+<div class="container">
+
+  <div id="write" class="card">
+    <h2>Write a Story</h2>
+    <input type="text" id="title" placeholder="Story Title...">
+    <textarea id="content" rows="5" placeholder="Write your story here..."></textarea>
+    <button class="post" onclick="addStory()">Post Story</button>
+  </div>
+
+  <div id="stories" class="card" style="display:none;">
+    <h2>My Stories</h2>
+    <div id="storyList"></div>
+  </div>
+
+  <div class="card music">
+    <h3>🎶 Background Music</h3>
+    <select onchange="changeMusic(this.value)">
+      <option value="">Select music</option>
+      <option value="https://www.bensound.com/bensound-music/bensound-sunny.mp3">Soft Happy</option>
+      <option value="https://www.bensound.com/bensound-music/bensound-slowmotion.mp3">Emotional</option>
+      <option value="https://www.bensound.com/bensound-music/bensound-creativeminds.mp3">Calm Focus</option>
+    </select>
+    <br><br>
+    <audio id="player" controls loop></audio>
+  </div>
+
+</div>
+
+<footer>
+  <p>Made with love 💗 | Share your stories with the world</p>
+</footer>
+
+<script>
+function showSection(section) {
+  document.getElementById('write').style.display = 'none';
+  document.getElementById('stories').style.display = 'none';
+  document.getElementById(section).style.display = 'block';
+}
+
+function addStory() {
+  let title = document.getElementById('title').value;
+  let content = document.getElementById('content').value;
+
+  if(title === '' || content === '') {
+    alert('Please fill in both fields!');
+    return;
+  }
+
+  let story = { title, content };
+
+  let stories = JSON.parse(localStorage.getItem('stories')) || [];
+  stories.push(story);
+  localStorage.setItem('stories', JSON.stringify(stories));
+
+  document.getElementById('title').value = '';
+  document.getElementById('content').value = '';
+
+  displayStories();
+}
+
+function displayStories() {
+  let storyList = document.getElementById('storyList');
+  storyList.innerHTML = '';
+
+  let stories = JSON.parse(localStorage.getItem('stories')) || [];
+
+  stories.forEach(story => {
+    let div = document.createElement('div');
+    div.classList.add('card');
+    div.innerHTML = `<h3>${story.title}</h3><p>${story.content}</p>`;
+    storyList.appendChild(div);
+  });
+}
+
+function changeMusic(src) {
+  let player = document.getElementById('player');
+  player.src = src;
+  player.play();
+}
+
+displayStories();
+</script>
+
+</body>
+</html>
